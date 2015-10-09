@@ -81,4 +81,61 @@ class NoeudInstSi : public Noeud {
     Noeud*  m_sequence;
 };
 
+////////////////////////////////////////////////////////////////////////////////
+class NoeudInstTantQue : public Noeud {
+    public :
+        NoeudInstTantQue(Noeud * condition, Noeud * sequence);
+        ~NoeudInstTantQue() {}
+        int executer();
+    private : 
+        Noeud * m_condition;
+        Noeud * m_sequence;
+        
+};
+
+////////////////////////////////////////////////////////////////////////////////
+class NoeudInstRepeter : public Noeud {
+    public:
+        NoeudInstRepeter(Noeud * sequence, Noeud * condition);
+        ~NoeudInstRepeter() {}
+        int executer();
+    private:
+        Noeud * m_sequence;
+        Noeud * m_condition;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+class NoeudInstPour : public Noeud {
+    public:
+        NoeudInstPour(Noeud * initialisation, Noeud * condition, Noeud* iteration, Noeud* sequence);
+        ~NoeudInstPour() {}
+        int executer();
+    private:
+        Noeud * m_initialisation;
+        Noeud * m_condition;
+        Noeud * m_iteration;
+        Noeud * m_sequence;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+class NoeudInstEcrire : public Noeud {
+    public:
+        NoeudInstEcrire(Noeud * chaine);
+        ~NoeudInstEcrire() {}
+        int executer();
+        void ajoute(Noeud * chaine);
+    private:
+        vector<Noeud *> m_chaines;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+class NoeudInstLire : public Noeud {
+    public:
+        NoeudInstLire(Noeud * variable);
+        ~NoeudInstLire() {}
+        int executer();
+        void ajoute(Noeud * variable);
+    private:
+        vector<Noeud *> m_variables;
+};
 #endif /* ARBREABSTRAIT_H */
