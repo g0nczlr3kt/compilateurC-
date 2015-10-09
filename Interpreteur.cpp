@@ -56,7 +56,7 @@ Noeud* Interpreteur::seqInst() {
   NoeudSeqInst* sequence = new NoeudSeqInst();
   do {
     sequence->ajoute(inst());
-  } while (m_lecteur.getSymbole() == "<VARIABLE>" || m_lecteur.getSymbole() == "si");
+  } while (m_lecteur.getSymbole() == "<VARIABLE>" || m_lecteur.getSymbole() == "si" || m_lecteur.getSymbole() == "tantque" || m_lecteur.getSymbole() == "repeter" || m_lecteur.getSymbole() == "pour" || m_lecteur.getSymbole() == "ecrire" || m_lecteur.getSymbole() == "lire" );
   // Tant que le symbole courant est un début possible d'instruction...
   // Il faut compléter cette condition chaque fois qu'on rajoute une nouvelle instruction
   return sequence;
@@ -69,7 +69,7 @@ Noeud* Interpreteur::inst() {
     testerEtAvancer(";");
     return affect;
   }
-  else if (m_lecteur.getSymbole() == "si")
+  else if (m_lecteur.getSymbole() == "si"|| m_lecteur.getSymbole() == "tantque" || m_lecteur.getSymbole() == "repeter" || m_lecteur.getSymbole() == "pour" || m_lecteur.getSymbole() == "ecrire" || m_lecteur.getSymbole() == "lire" )
     return instSi();
   // Compléter les alternatives chaque fois qu'on rajoute une nouvelle instruction
   else erreur("Instruction incorrecte");
@@ -171,6 +171,29 @@ Noeud* Interpreteur::instPour() {
     testerEtAvancer(")");
     Noeud* sequence = sequence();
     testerEtAvancer("finpour");
-    return new NoeudInstPour();
+    return new NoeudInstPour(affectation1,condition,affectation2,sequence);
 }
 
+Noeud* Interpreteur::instEcrire() {
+    testerEtAvancer("ecrire");
+    testerEtAvancer("(");
+    NoeudInstEcrire* aEcrire = new NoeudInstEcrire();
+  do {
+    aEcrire->ajoute(inst());
+  } while (m_lecteur.getSymbole() == "<EXPRESSION>" || m_lecteur.getSymbole() == "<CHAINE>");
+  testerEtAvancer(")");
+  return aEcrire;
+    
+}
+
+Noeud* Interpreteur::instLire() {
+    testerEtAvancer("lire");
+    testerEtAvancer("(");
+    NoeudInstLire* aLire = new NoeudInstLire();
+  do {
+    aLire->ajoute(inst());
+  } while (m_lecteur.getSymbole() == "<VARIABLE>" );
+  testerEtAvancer(")");
+  return aLire;
+    
+}
