@@ -137,3 +137,40 @@ Noeud* Interpreteur::instSi() {
   return new NoeudInstSi(condition, sequence); // Et on renvoie un noeud Instruction Si
 }
 
+Noeud* Interpreteur::instTantque() {
+    testerEtAvancer("tantque");
+    testerEtAvancer("(");
+    Noeud* condition = expression();
+    testerEtAvancer(")");
+    Noeud* sequence = seqInst();
+    testerEtAvancer("fintantque");
+    return new NoeudInstTantque(condition, sequence);
+    
+    
+    
+}
+
+Noeud* Interpreteur::instRepeter() {
+    testerEtAvancer("repeter");
+    Noeud* sequence = seqInst();
+    testerEtAvancer("jusqua");
+    testerEtAvancer("(");
+    Noeud* condition = expression();
+    testerEtAvancer(")");
+    return new NoeudInstRepeter(sequence, condition);
+}
+
+Noeud* Interpreteur::instPour() {
+    testerEtAvancer("pour");
+    testerEtAvancer("(");
+    Noeud* affectation1 = affectation();
+    testerEtAvancer(";");
+    Noeud* condition =  expression();
+    testerEtAvancer(";");
+    Noeud* affectation2 = affectation();
+    testerEtAvancer(")");
+    Noeud* sequence = sequence();
+    testerEtAvancer("finpour");
+    return new NoeudInstPour();
+}
+
