@@ -69,8 +69,18 @@ Noeud* Interpreteur::inst() {
     testerEtAvancer(";");
     return affect;
   }
-  else if (m_lecteur.getSymbole() == "si"|| m_lecteur.getSymbole() == "tantque" || m_lecteur.getSymbole() == "repeter" || m_lecteur.getSymbole() == "pour" || m_lecteur.getSymbole() == "ecrire" || m_lecteur.getSymbole() == "lire" )
-    return instSi();
+  else if (m_lecteur.getSymbole() == "si" )
+   return instSi(); 
+  else if (m_lecteur.getSymbole() == "tantque" )
+   return instTantque(); 
+  else if (m_lecteur.getSymbole() == "repeter" )
+   return instRepeter(); 
+  else if (m_lecteur.getSymbole() == "pour" )
+   return instPour(); 
+  else if (m_lecteur.getSymbole() == "ecrire" )
+   return instEcrire();
+  else if (m_lecteur.getSymbole() == "lire" )
+   return instLire();
   // Compléter les alternatives chaque fois qu'on rajoute une nouvelle instruction
   else erreur("Instruction incorrecte");
 }
@@ -175,12 +185,20 @@ Noeud* Interpreteur::instPour() {
 Noeud* Interpreteur::instEcrire() {
     testerEtAvancer("ecrire");
     testerEtAvancer("(");
-    NoeudInstEcrire* sequence = new NoeudInstEcrire();
+    NoeudInstEcrire* seq = new NoeudInstEcrire();
   do {
-    sequence->ajoute(inst());
-  } while (m_lecteur.getSymbole() == "<EXPRESSION>" || m_lecteur.getSymbole() == "<CHAINE>");
+      m_lecteur.avancer();
+      if (m_lecteur.getSymbole() == "<EXPRESSION>") {
+          seq->ajoute(expression());
+      }
+      else if (m_lecteur.getSymbole() == "<CHAINE>") {
+          seq->ajoute(m_table.chercheAjoute(m_lecteur.getSymbole()));
+          m_lecteur.avancer();
+      }
+  } while (m_lecteur.getSymbole() == ",");
   testerEtAvancer(")");
-  return sequence;
+  testerEtAvancer(";");
+  return seq;
     
 }
 
