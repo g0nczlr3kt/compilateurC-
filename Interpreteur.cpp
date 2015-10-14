@@ -185,7 +185,16 @@ Noeud* Interpreteur::instPour() {
 Noeud* Interpreteur::instEcrire() {
     testerEtAvancer("ecrire");
     testerEtAvancer("(");
-    NoeudInstEcrire* seq = new NoeudInstEcrire();
+    m_lecteur.avancer();
+    NoeudInstEcrire* seq;
+      if (m_lecteur.getSymbole() == "<EXPRESSION>") {
+        seq = new NoeudInstEcrire(expression());      }
+      else  {
+          seq = new NoeudInstEcrire(m_table.chercheAjoute(m_lecteur.getSymbole()));
+          m_lecteur.avancer();
+      }
+    testerEtAvancer(",");
+    
   do {
       m_lecteur.avancer();
       if (m_lecteur.getSymbole() == "<EXPRESSION>") {
@@ -205,9 +214,9 @@ Noeud* Interpreteur::instEcrire() {
 Noeud* Interpreteur::instLire() {
     testerEtAvancer("lire");
     testerEtAvancer("(");
-    NoeudInstLire* sequence = new NoeudInstLire();
+    NoeudInstLire* sequence = new NoeudInstLire(m_table.chercheAjoute(m_lecteur.getSymbole()));
   do {
-    sequence->ajoute(inst());
+    sequence->ajoute(m_table.chercheAjoute(m_lecteur.getSymbole()));
   } while (m_lecteur.getSymbole() == "<VARIABLE>" );
   testerEtAvancer(")");
   return sequence;
