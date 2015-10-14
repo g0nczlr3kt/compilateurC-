@@ -125,8 +125,15 @@ NoeudInstEcrire::NoeudInstEcrire(Noeud* chaine): m_chaines() {
 
 int NoeudInstEcrire::executer() {
     string res;
-    for (unsigned int i = 0; i < m_chaines.size(); i++) res = res + m_chaines[i];
-    cout << res;
+    
+        for (unsigned int i = 0; i < m_chaines.size(); i++) {
+            if ( (typeid(*m_chaines[i])==typeid(SymboleValue) &&  *((SymboleValue*)m_chaines[i])== "<CHAINE>" )){
+                res = res + ((SymboleValue*)m_chaines[i])->getChaine();
+            } else {
+                res = res + to_string(m_chaines[i]->executer());
+            }
+        }
+        cout << res;
     return 0;
 }
 
@@ -143,7 +150,11 @@ NoeudInstLire::NoeudInstLire(Noeud* variable) : m_variables() {
 }
 
 int NoeudInstLire::executer() {
-        for (unsigned int i = 0; i < m_variables.size(); i++) cin >> m_variables[i];
+        for (unsigned int i = 0; i < m_variables.size(); i++){
+            int valeur;
+            cin>>valeur;
+            ((SymboleValue*)m_variables[i])->setValeur(valeur);
+        }
         return 0;
 }
 
