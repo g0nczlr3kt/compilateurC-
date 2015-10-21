@@ -133,7 +133,7 @@ int NoeudInstEcrire::executer() {
                 res = res + to_string(m_chaines[i]->executer());
             }
         }
-        cout << res;
+        cout << res <<"\n";
     return 0;
 }
 

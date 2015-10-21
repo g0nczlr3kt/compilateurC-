@@ -185,40 +185,48 @@ Noeud* Interpreteur::instPour() {
 Noeud* Interpreteur::instEcrire() {
     testerEtAvancer("ecrire");
     testerEtAvancer("(");
-    m_lecteur.avancer();
     NoeudInstEcrire* seq;
-      if (m_lecteur.getSymbole() == "<EXPRESSION>") {
-        seq = new NoeudInstEcrire(expression());      }
-      else  {
-          seq = new NoeudInstEcrire(m_table.chercheAjoute(m_lecteur.getSymbole()));
-          m_lecteur.avancer();
+    //Si c'est une chaine
+    if (m_lecteur.getSymbole() == "<CHAINE>") {
+        seq = new NoeudInstEcrire(m_table.chercheAjoute(m_lecteur.getSymbole()));
+        m_lecteur.avancer();
       }
-    testerEtAvancer(",");
+    //Sinon c'est une expression
+    else  {
+        seq = new NoeudInstEcrire(expression());
+    }
     
-  do {
-      m_lecteur.avancer();
-      if (m_lecteur.getSymbole() == "<EXPRESSION>") {
-          seq->ajoute(expression());
-      }
-      else if (m_lecteur.getSymbole() == "<CHAINE>") {
-          seq->ajoute(m_table.chercheAjoute(m_lecteur.getSymbole()));
-          m_lecteur.avancer();
-      }
-  } while (m_lecteur.getSymbole() == ",");
-  testerEtAvancer(")");
-  testerEtAvancer(";");
-  return seq;
-    
+    //Si plusieurs paramètres sont rentrés
+    if(m_lecteur.getSymbole()==","){
+        do {
+            m_lecteur.avancer();
+            if (m_lecteur.getSymbole() == "<CHAINE>") {
+                seq->ajoute(m_table.chercheAjoute(m_lecteur.getSymbole()));
+                m_lecteur.avancer();
+            }
+            else  {
+                seq->ajoute(expression());
+            }
+        } while (m_lecteur.getSymbole() == ",");
+    }
+    testerEtAvancer(")");
+    testerEtAvancer(";");
+    return seq;
 }
 
 Noeud* Interpreteur::instLire() {
     testerEtAvancer("lire");
     testerEtAvancer("(");
     NoeudInstLire* sequence = new NoeudInstLire(m_table.chercheAjoute(m_lecteur.getSymbole()));
-  do {
-    sequence->ajoute(m_table.chercheAjoute(m_lecteur.getSymbole()));
-  } while (m_lecteur.getSymbole() == "<VARIABLE>" );
-  testerEtAvancer(")");
-  return sequence;
-    
+    m_lecteur.avancer();
+    if(m_lecteur.getSymbole()==","){
+        do {
+        m_lecteur.avancer();
+        sequence->ajoute(m_table.chercheAjoute(m_lecteur.getSymbole()));
+        m_lecteur.avancer();
+        } while (m_lecteur.getSymbole() == "," );
+    }
+    testerEtAvancer(")");
+    testerEtAvancer(";");
+    return sequence;
 }
