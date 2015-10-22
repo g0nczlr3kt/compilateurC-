@@ -345,3 +345,12 @@ Noeud* Interpreteur::instLire() {
               
       }
 }
+
+void Interpreteur::traduitEnJava(ostream & cout, unsigned int indentation) const {
+   cout<<"import java.util.Scanner;"<<setw(4*indentation)<<"class Main {"<<endl<<setw(indentation)<<"static void main (String[] args){"<<endl;
+   cout << "Scanner sc = new scanner(System.in);";
+   //declaration des variables
+   getArbre()->traduitEnJava(cout, indentation + 1);
+   cout << setw(indentation)<<"}"<<endl<<setw(4*indentation)<<"}"<<endl;
+    
+}

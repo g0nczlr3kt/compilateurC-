@@ -262,7 +262,7 @@ void NoeudInstLire::traduitEnJava(ostream & cout, unsigned int indentation) cons
      //ainsi que int read; afin d'éviter les erreurs
     for (unsigned int i = 0; i < m_variables.size(); i++){
             string read = ((SymboleValue*)m_variables[i])->getChaine();
-            cout << read << "sc.nextLine();" << endl;
+            cout <<"int"<< read << "= sc.nextLine();" << endl;
          
         }
             
