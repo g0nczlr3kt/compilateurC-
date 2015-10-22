@@ -20,6 +20,7 @@ class Noeud {
     virtual int  executer() =0 ; // Méthode pure (non implémentée) qui rend la classe abstraite
     virtual void ajoute(Noeud* instruction) { throw OperationInterditeException(); }
     virtual ~Noeud() {} // Présence d'un destructeur virtuel conseillée dans les classes abstraites
+    virtual void traduitEnJava(ostream & cout, unsigned int indentation) const {}
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -31,7 +32,7 @@ class NoeudSeqInst : public Noeud {
     ~NoeudSeqInst() {} // A cause du destructeur virtuel de la classe Noeud
     int executer();    // Exécute chaque instruction de la séquence
     void ajoute(Noeud* instruction);  // Ajoute une instruction à la séquence
-
+    void traduitEnJava(ostream & cout, unsigned int indentation) const;
   private:
     vector<Noeud *> m_instructions; // pour stocker les instructions de la séquence
 };
@@ -44,6 +45,7 @@ class NoeudAffectation : public Noeud {
      NoeudAffectation(Noeud* variable, Noeud* expression); // construit une affectation
     ~NoeudAffectation() {} // A cause du destructeur virtuel de la classe Noeud
     int executer();        // Exécute (évalue) l'expression et affecte sa valeur à la variable
+    void traduitEnJava(ostream & cout, unsigned int indentation) const;
 
   private:
     Noeud* m_variable;
@@ -59,6 +61,7 @@ class NoeudOperateurBinaire : public Noeud {
     // Construit une opération binaire : operandeGauche operateur OperandeDroit
    ~NoeudOperateurBinaire() {} // A cause du destructeur virtuel de la classe Noeud
     int executer();            // Exécute (évalue) l'opération binaire)
+    void traduitEnJava(ostream & cout, unsigned int indentation) const;
 
   private:
     Symbole m_operateur;
@@ -75,6 +78,7 @@ class NoeudInstSi : public Noeud {
      // Construit une "instruction si" avec sa condition et sa séquence d'instruction
    ~NoeudInstSi() {} // A cause du destructeur virtuel de la classe Noeud
     int executer();  // Exécute l'instruction si : si condition vraie on exécute la séquence
+    void traduitEnJava(ostream & cout, unsigned int indentation) const;
 
   private:
     Noeud*  m_condition;
@@ -87,6 +91,8 @@ class NoeudInstTantQue : public Noeud {
         NoeudInstTantQue(Noeud * condition, Noeud * sequence);
         ~NoeudInstTantQue() {}
         int executer();
+        void traduitEnJava(ostream & cout, unsigned int indentation) const;
+
     private : 
         Noeud * m_condition;
         Noeud * m_sequence;
@@ -99,6 +105,8 @@ class NoeudInstRepeter : public Noeud {
         NoeudInstRepeter(Noeud * sequence, Noeud * condition);
         ~NoeudInstRepeter() {}
         int executer();
+        void traduitEnJava(ostream & cout, unsigned int indentation) const;
+
     private:
         Noeud * m_sequence;
         Noeud * m_condition;
@@ -110,6 +118,7 @@ class NoeudInstPour : public Noeud {
         NoeudInstPour(Noeud * initialisation, Noeud * condition, Noeud* iteration, Noeud* sequence);
         ~NoeudInstPour() {}
         int executer();
+        void traduitEnJava(ostream & cout, unsigned int indentation) const;
     private:
         Noeud * m_initialisation;
         Noeud * m_condition;
@@ -124,6 +133,8 @@ class NoeudInstEcrire : public Noeud {
         ~NoeudInstEcrire() {}
         int executer();
         void ajoute(Noeud * chaine);
+        void traduitEnJava(ostream & cout, unsigned int indentation) const;
+
     private:
         vector<Noeud *> m_chaines;
 };
@@ -135,6 +146,8 @@ class NoeudInstLire : public Noeud {
         ~NoeudInstLire() {}
         int executer();
         void ajoute(Noeud * variable);
+        void traduitEnJava(ostream & cout, unsigned int indentation) const;
+
     private:
         vector<Noeud *> m_variables;
 };
