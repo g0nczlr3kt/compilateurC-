@@ -14,9 +14,8 @@ int main(int argc, char* argv[]) {
   ifstream fichier(nomFich.c_str());
   try {
     Interpreteur interpreteur(fichier);
+    cout << endl << "================ Erreurs de Syntaxe :\n";
     interpreteur.analyse();
-    // Si pas d'exception levée, l'analyse syntaxique a réussi
-    cout << endl << "================ Syntaxe Correcte" << endl;
     // On affiche le contenu de la table des symboles avant d'exécuter le programme
     cout << endl << "================ Table des symboles avant exécution : " << interpreteur.getTable();
     cout << endl << "================ Execution de l'arbre" << endl;
